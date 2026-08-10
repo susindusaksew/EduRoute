@@ -47,7 +47,7 @@ export default function DetailScreen({ route }) {
         <Text style={[styles.sectionHeader, headerTextColor]}>Route Stops</Text>
         {routeDetail?.stops?.map((stop, index) => (
           <Text key={index} style={[styles.stopItem, textColor]}>
-            📍 Stop {index + 1}: {stop}
+             Stop {index + 1}: {stop}
           </Text>
         ))}
       </View>
