@@ -3,21 +3,19 @@ import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { SettingsContext } from '../context/SettingsContext';
 
 export default function ProfileScreen() {
-  const { isDarkMode } = useContext(SettingsContext);
+  const { isDarkMode, userProfile, updateUserProfile } = useContext(SettingsContext);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Student Details
-  const [name, setName] = useState("Saman Perera");
-  const [studentId, setStudentId] = useState("IT21045890");
-  const [email, setEmail] = useState("saman.p@student.edu");
-  const [route, setRoute] = useState("Route 01 - Kandy to Campus");
-  const [busStop, setBusStop] = useState("Peradeniya Junction");
-  
-  // Gender State (Male / Female)
-  const [gender, setGender] = useState("Male");
+ 
+  const [formData, setFormData] = useState({ ...userProfile });
 
-  // Save Function
+  const handleChange = (key, value) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
+  };
+
+  
   const handleSave = () => {
+    updateUserProfile(formData);
     setIsEditing(false);
     Alert.alert('Success 🎉', 'Profile details updated successfully!');
   };
@@ -30,9 +28,9 @@ export default function ProfileScreen() {
     <ScrollView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#f5f5f5' }]}>
       {/* Header Section */}
       <View style={styles.header}>
-        <View style={[styles.avatarCircle, { backgroundColor: gender === 'Male' ? '#1a73e8' : '#e91e63' }]}>
+        <View style={[styles.avatarCircle, { backgroundColor: (isEditing ? formData.gender : userProfile.gender) === 'Male' ? '#1a73e8' : '#e91e63' }]}>
           <Text style={styles.avatarIcon}>
-            {gender === 'Male' ? '👨‍🎓' : '👩‍🎓'}
+            {(isEditing ? formData.gender : userProfile.gender) === 'Male' ? '👨‍🎓' : '👩‍🎓'}
           </Text>
         </View>
 
@@ -46,16 +44,16 @@ export default function ProfileScreen() {
                 borderColor: isDarkMode ? '#64b5f6' : '#007AFF'
               }
             ]}
-            value={name}
-            onChangeText={(text) => setName(text)}
+            value={formData.name}
+            onChangeText={(text) => handleChange('name', text)}
             placeholder="Name"
             placeholderTextColor={isDarkMode ? '#888' : '#aaa'}
           />
         ) : (
-          <Text style={[styles.name, { color: isDarkMode ? '#fff' : '#333' }]}>{name}</Text>
+          <Text style={[styles.name, { color: isDarkMode ? '#fff' : '#333' }]}>{userProfile.name}</Text>
         )}
 
-        <Text style={[styles.studentId, labelColor]}>{studentId}</Text>
+        <Text style={[styles.studentId, labelColor]}>{userProfile.studentId}</Text>
       </View>
 
       {/* Info Section */}
@@ -78,28 +76,28 @@ export default function ProfileScreen() {
               <TouchableOpacity
                 style={[
                   styles.genderBtn, 
-                  gender === 'Male' && styles.genderBtnActiveMale,
+                  formData.gender === 'Male' && styles.genderBtnActiveMale,
                   { borderColor: isDarkMode ? '#555' : '#ccc' }
                 ]}
-                onPress={() => setGender('Male')}
+                onPress={() => handleChange('gender', 'Male')}
               >
-                <Text style={[styles.genderBtnText, gender === 'Male' && { color: '#fff' }]}>👦 Boy</Text>
+                <Text style={[styles.genderBtnText, formData.gender === 'Male' && { color: '#fff' }]}>👦 Boy</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={[
                   styles.genderBtn, 
-                  gender === 'Female' && styles.genderBtnActiveFemale,
+                  formData.gender === 'Female' && styles.genderBtnActiveFemale,
                   { borderColor: isDarkMode ? '#555' : '#ccc' }
                 ]}
-                onPress={() => setGender('Female')}
+                onPress={() => handleChange('gender', 'Female')}
               >
-                <Text style={[styles.genderBtnText, gender === 'Female' && { color: '#fff' }]}>👧 Girl</Text>
+                <Text style={[styles.genderBtnText, formData.gender === 'Female' && { color: '#fff' }]}>👧 Girl</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <Text style={[styles.value, textColor]}>
-              {gender === 'Male' ? '👦 Male' : '👧 Female'}
+              {userProfile.gender === 'Male' ? '👦 Male' : '👧 Female'}
             </Text>
           )}
         </View>
@@ -117,16 +115,16 @@ export default function ProfileScreen() {
                   borderColor: isDarkMode ? '#64b5f6' : '#007AFF' 
                 }
               ]}
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              value={formData.email}
+              onChangeText={(text) => handleChange('email', text)}
               keyboardType="email-address"
             />
           ) : (
-            <Text style={[styles.value, textColor]}>{email}</Text>
+            <Text style={[styles.value, textColor]}>{userProfile.email}</Text>
           )}
         </View>
 
-        {/* Assigned Route */}
+        {/* Route */}
         <View style={[styles.infoRow, { borderBottomColor: isDarkMode ? '#333' : '#eee' }]}>
           <Text style={[styles.label, labelColor]}>Route:</Text>
           {isEditing ? (
@@ -139,11 +137,11 @@ export default function ProfileScreen() {
                   borderColor: isDarkMode ? '#64b5f6' : '#007AFF' 
                 }
               ]}
-              value={route}
-              onChangeText={(text) => setRoute(text)}
+              value={formData.route}
+              onChangeText={(text) => handleChange('route', text)}
             />
           ) : (
-            <Text style={[styles.value, textColor]}>{route}</Text>
+            <Text style={[styles.value, textColor]}>{userProfile.route}</Text>
           )}
         </View>
 
@@ -160,11 +158,11 @@ export default function ProfileScreen() {
                   borderColor: isDarkMode ? '#64b5f6' : '#007AFF' 
                 }
               ]}
-              value={busStop}
-              onChangeText={(text) => setBusStop(text)}
+              value={formData.busStop}
+              onChangeText={(text) => handleChange('busStop', text)}
             />
           ) : (
-            <Text style={[styles.value, textColor]}>{busStop}</Text>
+            <Text style={[styles.value, textColor]}>{userProfile.busStop}</Text>
           )}
         </View>
       </View>
@@ -175,7 +173,13 @@ export default function ProfileScreen() {
           <Text style={styles.btnText}>💾 Save Changes</Text>
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+        <TouchableOpacity 
+          style={styles.editButton} 
+          onPress={() => { 
+            setFormData({ ...userProfile }); 
+            setIsEditing(true); 
+          }}
+        >
           <Text style={styles.btnText}>✏️ Edit Profile</Text>
         </TouchableOpacity>
       )}
