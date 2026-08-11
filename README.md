@@ -51,6 +51,10 @@ Users can switch between Light Mode and Dark Mode.
 
 The theme setting is managed globally using the React Context API, so the selected theme is applied consistently across the different screens.
 
+**Bus Arrival Alerts (Notifications)**
+
+Users can enable or disable push alerts to receive notifications 5 minutes before their scheduled shuttle arrives at the stop.
+
 ### 4. Student Profile
 
 The Profile Screen allows students to manage their basic profile information.

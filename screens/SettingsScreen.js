@@ -1,9 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { StyleSheet, Switch, Text, View } from 'react-native';
 import { SettingsContext } from '../context/SettingsContext';
 
 export default function SettingsScreen() {
   const { isMiles, setIsMiles, isDarkMode, setIsDarkMode } = useContext(SettingsContext);
+
+  //  Local State for Notifications
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#fff' }]}>
@@ -37,6 +40,24 @@ export default function SettingsScreen() {
         />
       </View>
 
+      
+      <View style={[styles.settingRow, { borderBottomColor: isDarkMode ? '#333' : '#eee' }]}>
+        <View style={styles.textGroup}>
+          <Text style={[styles.label, { color: isDarkMode ? '#ddd' : '#333' }]}>
+            Bus Arrival Alerts
+          </Text>
+          <Text style={[styles.subLabel, { color: isDarkMode ? '#aaa' : '#666' }]}>
+            Get notified 5 mins before shuttle arrives
+          </Text>
+        </View>
+        <Switch
+          trackColor={{ false: '#767577', true: '#34a853' }}
+          thumbColor={notificationsEnabled ? '#fff' : '#f4f3f4'}
+          value={notificationsEnabled}
+          onValueChange={(value) => setNotificationsEnabled(value)}
+        />
+      </View>
+
       {/* Status Info */}
       <Text style={[styles.statusText, { color: isDarkMode ? '#aaa' : '#666' }]}>
         Current Display Unit:{' '}
@@ -49,6 +70,13 @@ export default function SettingsScreen() {
         Active Theme:{' '}
         <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#000' }}>
           {isDarkMode ? 'Dark Mode 🌙' : 'Light Mode ☀️'}
+        </Text>
+      </Text>
+
+      <Text style={[styles.statusText, { color: isDarkMode ? '#aaa' : '#666', marginTop: 8 }]}>
+        Alerts Status:{' '}
+        <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#000' }}>
+          {notificationsEnabled ? 'Enabled 🔔' : 'Disabled 🔕'}
         </Text>
       </Text>
     </View>
@@ -65,6 +93,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
+  textGroup: { flex: 1, paddingRight: 10 },
   label: { fontSize: 15 },
+  subLabel: { fontSize: 12, marginTop: 2 },
   statusText: { marginTop: 16, fontSize: 14 },
 });
