@@ -6,14 +6,12 @@ export default function ProfileScreen() {
   const { isDarkMode, userProfile, updateUserProfile } = useContext(SettingsContext);
   const [isEditing, setIsEditing] = useState(false);
 
- 
   const [formData, setFormData] = useState({ ...userProfile });
 
   const handleChange = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
   };
 
-  
   const handleSave = () => {
     updateUserProfile(formData);
     setIsEditing(false);
@@ -34,6 +32,7 @@ export default function ProfileScreen() {
           </Text>
         </View>
 
+        {/* Name Input/Text */}
         {isEditing ? (
           <TextInput
             style={[
@@ -53,7 +52,25 @@ export default function ProfileScreen() {
           <Text style={[styles.name, { color: isDarkMode ? '#fff' : '#333' }]}>{userProfile.name}</Text>
         )}
 
-        <Text style={[styles.studentId, labelColor]}>{userProfile.studentId}</Text>
+        {/* Student ID Input/Text */}
+        {isEditing ? (
+          <TextInput
+            style={[
+              styles.studentIdInput, 
+              { 
+                backgroundColor: isDarkMode ? '#1e1e1e' : '#fff', 
+                color: isDarkMode ? '#fff' : '#000',
+                borderColor: isDarkMode ? '#64b5f6' : '#007AFF'
+              }
+            ]}
+            value={formData.studentId}
+            onChangeText={(text) => handleChange('studentId', text)}
+            placeholder="Student ID"
+            placeholderTextColor={isDarkMode ? '#888' : '#aaa'}
+          />
+        ) : (
+          <Text style={[styles.studentId, labelColor]}>{userProfile.studentId}</Text>
+        )}
       </View>
 
       {/* Info Section */}
@@ -239,6 +256,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     minWidth: 200,
+    marginVertical: 4,
+  },
+  studentIdInput: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    fontSize: 14,
+    textAlign: 'center',
+    minWidth: 150,
     marginVertical: 4,
   },
 
