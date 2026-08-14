@@ -6,7 +6,10 @@ export default function ProfileScreen() {
   const { isDarkMode, userProfile, updateUserProfile } = useContext(SettingsContext);
   const [isEditing, setIsEditing] = useState(false);
 
-  const [formData, setFormData] = useState({ ...userProfile });
+  const [formData, setFormData] = useState({ 
+    phone: '0771234567',
+    ...userProfile 
+  });
 
   const handleChange = (key, value) => {
     setFormData(prev => ({ ...prev, [key]: value }));
@@ -23,7 +26,10 @@ export default function ProfileScreen() {
   const labelColor = { color: isDarkMode ? '#aaa' : '#666' };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#f5f5f5' }]}>
+    <ScrollView 
+      style={{ flex: 1, backgroundColor: isDarkMode ? '#121212' : '#f5f5f5' }}
+      contentContainerStyle={styles.scrollContent}
+    >
       {/* Header Section */}
       <View style={styles.header}>
         <View style={[styles.avatarCircle, { backgroundColor: (isEditing ? formData.gender : userProfile.gender) === 'Male' ? '#1a73e8' : '#e91e63' }]}>
@@ -73,6 +79,38 @@ export default function ProfileScreen() {
         )}
       </View>
 
+      {/* 💳 Digital Bus Pass Status Banner */}
+      <View style={[styles.passCard, { backgroundColor: isDarkMode ? '#1b3a20' : '#e8f5e9', borderColor: isDarkMode ? '#2e7d32' : '#a5d6a7' }]}>
+        <View style={styles.passHeader}>
+          <Text style={[styles.passTitle, { color: isDarkMode ? '#81c784' : '#2e7d32' }]}>🚌 Digital Bus Pass</Text>
+          <View style={styles.activeBadge}>
+            <Text style={styles.activeBadgeText}>ACTIVE ✅</Text>
+          </View>
+        </View>
+        <Text style={[styles.passSub, { color: isDarkMode ? '#c8e6c9' : '#1b5e20' }]}>
+          Monthly Pass Fee: <Text style={{ fontWeight: 'bold' }}>PAID</Text> (Aug 2026)
+        </Text>
+      </View>
+
+      {/* 📊 Quick Stats Row */}
+      <View style={styles.statsContainer}>
+        <View style={[styles.statBox, { backgroundColor: isDarkMode ? '#1e1e1e' : '#fff', borderColor: isDarkMode ? '#333' : '#e0e0e0' }]}>
+          <Text style={styles.statIcon}>⚡</Text>
+          <Text style={[styles.statValue, { color: isDarkMode ? '#fff' : '#000' }]}>95%</Text>
+          <Text style={[styles.statLabel, labelColor]}>Attendance</Text>
+        </View>
+        <View style={[styles.statBox, { backgroundColor: isDarkMode ? '#1e1e1e' : '#fff', borderColor: isDarkMode ? '#333' : '#e0e0e0' }]}>
+          <Text style={styles.statIcon}>🚌</Text>
+          <Text style={[styles.statValue, { color: isDarkMode ? '#fff' : '#000' }]}>42</Text>
+          <Text style={[styles.statLabel, labelColor]}>Trips Taken</Text>
+        </View>
+        <View style={[styles.statBox, { backgroundColor: isDarkMode ? '#1e1e1e' : '#fff', borderColor: isDarkMode ? '#333' : '#e0e0e0' }]}>
+          <Text style={styles.statIcon}>⭐</Text>
+          <Text style={[styles.statValue, { color: isDarkMode ? '#fff' : '#000' }]}>Verified</Text>
+          <Text style={[styles.statLabel, labelColor]}>Status</Text>
+        </View>
+      </View>
+
       {/* Info Section */}
       <View style={[
         styles.infoSection, 
@@ -116,6 +154,30 @@ export default function ProfileScreen() {
             <Text style={[styles.value, textColor]}>
               {userProfile.gender === 'Male' ? '👦 Male' : '👧 Female'}
             </Text>
+          )}
+        </View>
+
+        {/* 📞 Phone Number */}
+        <View style={[styles.infoRow, { borderBottomColor: isDarkMode ? '#333' : '#eee' }]}>
+          <Text style={[styles.label, labelColor]}>Phone:</Text>
+          {isEditing ? (
+            <TextInput
+              style={[
+                styles.input, 
+                { 
+                  backgroundColor: isDarkMode ? '#2c2c2c' : '#ffffff', 
+                  color: isDarkMode ? '#fff' : '#000',
+                  borderColor: isDarkMode ? '#64b5f6' : '#007AFF' 
+                }
+              ]}
+              value={formData.phone}
+              onChangeText={(text) => handleChange('phone', text)}
+              keyboardType="phone-pad"
+              placeholder="07XXXXXXXX"
+              placeholderTextColor={isDarkMode ? '#888' : '#aaa'}
+            />
+          ) : (
+            <Text style={[styles.value, textColor]}>{userProfile.phone || formData.phone}</Text>
           )}
         </View>
 
@@ -193,7 +255,7 @@ export default function ProfileScreen() {
         <TouchableOpacity 
           style={styles.editButton} 
           onPress={() => { 
-            setFormData({ ...userProfile }); 
+            setFormData({ phone: '0771234567', ...userProfile }); 
             setIsEditing(true); 
           }}
         >
@@ -205,8 +267,12 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  header: { alignItems: 'center', marginVertical: 20 },
+  // ScrollView inner padding & extra bottom space to fix scroll issue
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 80,
+  },
+  header: { alignItems: 'center', marginTop: 10, marginBottom: 15 },
   
   avatarCircle: {
     width: 90,
@@ -221,6 +287,47 @@ const styles = StyleSheet.create({
 
   name: { fontSize: 22, fontWeight: 'bold' },
   studentId: { fontSize: 14, marginTop: 4 },
+
+  /* Pass Card Styles */
+  passCard: {
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 15,
+  },
+  passHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  passTitle: { fontSize: 15, fontWeight: 'bold' },
+  activeBadge: {
+    backgroundColor: '#2e7d32',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  activeBadgeText: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
+  passSub: { fontSize: 13, marginTop: 6 },
+
+  /* Quick Stats Styles */
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+    marginBottom: 20,
+  },
+  statBox: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  statIcon: { fontSize: 18, marginBottom: 4 },
+  statValue: { fontSize: 15, fontWeight: 'bold' },
+  statLabel: { fontSize: 11, marginTop: 2 },
+
   infoSection: { 
     borderRadius: 12, 
     padding: 16, 
@@ -280,7 +387,7 @@ const styles = StyleSheet.create({
   genderBtnActiveFemale: { backgroundColor: '#e91e63', borderColor: '#e91e63' },
   genderBtnText: { fontSize: 12, fontWeight: 'bold' },
 
-  editButton: { backgroundColor: '#007AFF', padding: 14, borderRadius: 10, alignItems: 'center', marginBottom: 30 },
-  saveButton: { backgroundColor: '#2e7d32', padding: 14, borderRadius: 10, alignItems: 'center', marginBottom: 30 },
+  editButton: { backgroundColor: '#007AFF', padding: 14, borderRadius: 10, alignItems: 'center', marginTop: 10, marginBottom: 10 },
+  saveButton: { backgroundColor: '#2e7d32', padding: 14, borderRadius: 10, alignItems: 'center', marginTop: 10, marginBottom: 10 },
   btnText: { color: '#fff', fontWeight: 'bold', fontSize: 16 }
 });
