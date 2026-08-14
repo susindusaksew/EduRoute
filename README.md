@@ -117,7 +117,7 @@ This allows the profile information and application settings to be shared withou
 
 A digital bus pass section is included in the Profile Screen.
 
-It shows information such as the current pass status and payment status. For example, an active pass can be shown as **ACTIVE ✅**.
+It shows information such as the current pass status and payment status. For example, an active pass can be shown as **ACTIVE **.
 
 #### Quick Statistics
 
